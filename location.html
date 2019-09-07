@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Location</title>
+</head>
+
+<body>
+    <p id="properties"></p>
+
+    <script>
+        var txt = "";
+        txt += "<p>Location href: " + location.href + "</p>";
+        txt += "<p>Location hostname: " + location.hostname + "</p>";
+        txt += "<p>Location pathname: " + location.pathname + "</p>";
+        txt += "<p>Location protocol: " + location.protocol + "</p>";
+
+        document.getElementById("properties").innerHTML = txt;
+    </script>
+</body>
+
+</html>

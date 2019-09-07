@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Screen</title>
+</head>
+
+<body>
+    <p id="properties"></p>
+
+    <script>
+        var txt = "";
+        txt += "<p>Screen Width: " + screen.width + "</p>";
+        txt += "<p>Screen Height: " + screen.height + "</p>";
+        txt += "<p>Screen Available Width: " + screen.availWidth + "</p>";
+        txt += "<p>Screen Available Height: " + screen.availHeight + "</p>";
+        txt += "<p>Screen Color Depth: " + screen.colorDepth + "</p>";
+        txt += "<p>Screen Pixel Depth: " + screen.pixelDepth + "</p>";
+
+        document.getElementById("properties").innerHTML = txt;
+    </script>
+</body>
+
+</html>

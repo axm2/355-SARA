@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Navigator</title>
+</head>
+
+<body>
+    <p id="properties"></p>
+
+    <script>
+        var txt = "";
+        txt += "<p>Browser Name: " + navigator.appName + "</p>";
+        txt += "<p>Browser Product: " + navigator.product + "</p>";
+        txt += "<p>Browser App Version: " + navigator.appVersion + "</p>";
+        txt += "<p>Browser User Agent: " + navigator.userAgent + "</p>";
+        txt += "<p>Browser Platform: " + navigator.platform + "</p>";
+        txt += "<p>Browser Language: " + navigator.language + "</p>";
+
+        document.getElementById("properties").innerHTML = txt;
+    </script>
+</body>
+
+</html>
