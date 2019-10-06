@@ -4,7 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Navigator</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
+
+<div class="topnav" id="myTopnav">
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+        <button class="dropbtn">Course
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <a href='https://zybooks.com'>Zybook</a>
+            <a href='https://tophat.com'>TopHat</a>
+            <a href='https://drive.google.com'>Course Google Drive</a>
+            <a href='https://w3schools.com'>w3schools</a>
+        </div>
+    </div>
+    <div class="dropdown">
+        <button class="dropbtn">About
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <a href='devs.html'>Developers</a>
+            <a href='mailto:axmirza2@yahoo.com'>Contact Us</a>
+        </div>
+    </div>
+    <div class="dropdown">
+        <button class="dropbtn">Browser
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <a href='navigator.html' class="active">Navigator</a>
+            <a href='window.html'>Window</a>
+            <a href='screen.html'>Screen</a>
+            <a href='location.html'>Location</a>
+            <a href='geolocation.html'>Geolocation</a>
+        </div>
+    </div>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
+</div>
 
 <body>
     <p id="properties"></p>
