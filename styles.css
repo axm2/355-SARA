@@ -100,7 +100,7 @@ body{
     width: 100%;
 }
 
-@media only screen and (max-width: 450px){
+@media only screen and (max-width: 485px){
     .w3-sidebar{
         width: 100%;
         font-size: 10vw;
