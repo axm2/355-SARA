@@ -5,47 +5,77 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>CS 355 Home Page</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<div class="topnav" id="myTopnav">
-    <a href="index.html" class="active">Home</a>
-    <div class="dropdown">
-        <button class="dropbtn">Course
-            <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-content">
-            <a href='https://zybooks.com'>Zybook</a>
-            <a href='https://tophat.com'>TopHat</a>
-            <a href='https://drive.google.com'>Course Google Drive</a>
-            <a href='https://w3schools.com'>w3schools</a>
-        </div>
-    </div>
-    <div class="dropdown">
-        <button class="dropbtn">About
-            <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-content">
-            <a href='devs.html'>Developers</a>
-            <a href='mailto:axmirza2@yahoo.com'>Contact Us</a>
-        </div>
-    </div>
-    <div class="dropdown">
-        <button class="dropbtn">Browser
-            <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-content">
-            <a href='navigator.html'>Navigator</a>
-            <a href='window.html'>Window</a>
-            <a href='screen.html'>Screen</a>
-            <a href='location.html'>Location</a>
-            <a href='geolocation.html'>Geolocation</a>
-        </div>
-    </div>
-    <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
-</div>
+
 
 <body>
-    <h1>This is my home page for CS 355</h1>
+    <!-- Sidebar -->
+    <div class="w3-sidebar w3-bar-block w3-animate-left" style="display:none;z-index:5" id="mySidebar">
+        <button class="w3-bar-item w3-button w3-large" style = "width: 20%" onclick="w3_close()"> &times;</button>
+        <a href="/" class="w3-bar-item w3-button">Home</a>
+        <button class="w3-button w3-block w3-left-align" onclick="myAccFunc('courseAcc')">
+            Course <i class="fa fa-caret-down"></i>
+        </button>
+        <div id="courseAcc" class="w3-hide w3-white w3-card">
+            <a href='https://learn.zybooks.com/zybook/CUNYCSCI355TeitelmanFall2019' class="w3-bar-item w3-button">Zybook</a>
+            <a href='https://app.tophat.com/e/223762' class="w3-bar-item w3-button">TopHat</a>
+            <a href='https://tinyurl.com/CSCI355-Fall2019' class="w3-bar-item w3-button">Course Google Drive</a>
+            <a href='https://w3schools.org' class="w3-bar-item w3-button">w3schools</a>
+        </div>
+        <button class="w3-button w3-block w3-left-align" onclick="myAccFunc('aboutAcc')">
+            About <i class="fa fa-caret-down"></i>
+        </button>
+        <div id="aboutAcc" class="w3-hide w3-white w3-card">
+            <a href='devs.html' class="w3-bar-item w3-button">Developers</a>
+            <a href='mailto:axmirza2@yahoo.com' class="w3-bar-item w3-button">Contact Us</a>
+        </div>
+        <button class="w3-button w3-block w3-left-align" onclick="myAccFunc('browserAcc')">
+            Browser <i class="fa fa-caret-down"></i>
+        </button>
+        <div id="browserAcc" class="w3-hide w3-white w3-card">
+            <a href='navigator.html' class="w3-bar-item w3-button">Navigator</a>
+            <a href='window.html' class="w3-bar-item w3-button">Window</a>
+            <a href='screen.html' class="w3-bar-item w3-button">Screen</a>
+            <a href='location.html' class="w3-bar-item w3-button">Location</a>
+            <a href='geolocation.html' class="w3-bar-item w3-button">Geolocation</a>
+        </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="w3-overlay w3-animate-opacity" onclick="w3_close()" id="myOverlay"></div>
+
+    <div>
+        <button class="w3-button w3-white w3-xxlarge" style="font-size:20px;" onclick="w3_open()">&#9776;</button>
+        <div class="w3-container">
+            <h1>This is my home page for CS 355 😎</h1>
+        </div>
+    </div>
+
+    <script>
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+            document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+            document.getElementById("myOverlay").style.display = "none";
+        }
+
+        function myAccFunc(y) {
+            var x = document.getElementById(y);
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+                x.previousElementSibling.className += " w3-green";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+                x.previousElementSibling.className =
+                    x.previousElementSibling.className.replace(" w3-green", "");
+            }
+        }
+    </script>
 </body>
 
 </html>
