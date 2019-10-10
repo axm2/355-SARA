@@ -12,8 +12,9 @@ h1 {
 p{
     color: #D7D0C7;
     font-family: monospace;
-    font-size: 18px;
+    font-size: 14pt;
 }
+
 
 h2{
     font-family: monospace;
@@ -121,7 +122,7 @@ body{
 
 .w3-container{
     margin: 8px 16px;
-    width:50%;
+    width:75%;
 }
 
 .w3-xxlarge{
