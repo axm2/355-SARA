@@ -11,24 +11,16 @@
 <body>
     <!-- Sidebar -->
     <div class="w3-sidebar w3-bar-block w3-animate-left" style="display:none;z-index:5" id="mySidebar">
-        <button class="w3-bar-item w3-button w3-large" style="width: 20%" onclick="w3_close()"> &times;</button>
+        <button class="w3-bar-item w3-button w3-large" style = "width: 20%" onclick="w3_close()"> &times;</button>
         <a href="/" class="w3-bar-item w3-button">Home</a>
         <button class="w3-button w3-block w3-left-align" onclick="myAccFunc('courseAcc')">
             Course <i class="fa fa-caret-down"></i>
         </button>
         <div id="courseAcc" class="w3-hide w3-white w3-card">
-            <a href='https://learn.zybooks.com/zybook/CUNYCSCI355TeitelmanFall2019'
-                class="w3-bar-item w3-button">Zybook</a>
+            <a href='https://learn.zybooks.com/zybook/CUNYCSCI355TeitelmanFall2019' class="w3-bar-item w3-button">Zybook</a>
             <a href='https://app.tophat.com/e/223762' class="w3-bar-item w3-button">TopHat</a>
             <a href='https://tinyurl.com/CSCI355-Fall2019' class="w3-bar-item w3-button">Course Google Drive</a>
             <a href='https://w3schools.com' class="w3-bar-item w3-button">w3schools</a>
-        </div>
-        <button class="w3-button w3-block w3-left-align" onclick="myAccFunc('aboutAcc')">
-            About <i class="fa fa-caret-down"></i>
-        </button>
-        <div id="aboutAcc" class="w3-hide w3-white w3-card">
-            <a href='devs.html' class="w3-bar-item w3-button">Developers</a>
-            <a href='mailto:axmirza2@yahoo.com' class="w3-bar-item w3-button">Contact Us</a>
         </div>
         <button class="w3-button w3-block w3-left-align" onclick="myAccFunc('browserAcc')">
             Browser <i class="fa fa-caret-down"></i>
@@ -39,6 +31,21 @@
             <a href='screen.html' class="w3-bar-item w3-button">Screen</a>
             <a href='location.html' class="w3-bar-item w3-button">Location</a>
             <a href='geolocation.html' class="w3-bar-item w3-button">Geolocation</a>
+        </div>
+        <button class="w3-button w3-block w3-left-align" onclick="myAccFunc('searchAcc')">
+            Search <i class="fa fa-caret-down"></i>
+        </button>
+        <div id="searchAcc" class="w3-hide w3-white w3-card">
+            <a href='filesearch.html' class="w3-bar-item w3-button">File Search</a>
+            <a href='googlesearch.html' class="w3-bar-item w3-button">Google Search</a>
+            <a href='search.html' class="w3-bar-item w3-button">Search</a>
+        </div>
+        <button class="w3-button w3-block w3-left-align" onclick="myAccFunc('aboutAcc')">
+            About <i class="fa fa-caret-down"></i>
+        </button>
+        <div id="aboutAcc" class="w3-hide w3-white w3-card">
+            <a href='devs.html' class="w3-bar-item w3-button">Developers</a>
+            <a href='mailto:axmirza2@yahoo.com' class="w3-bar-item w3-button">Contact Us</a>
         </div>
     </div>
 

@@ -9,12 +9,15 @@ h1 {
     font-weight: bold;
 }
 
-p{
+p,input[type="file" i]{
     color: #D7D0C7;
     font-family: monospace;
     font-size: 14pt;
 }
 
+input[type="submit" i], input[type="text" i]{
+    font-size: 14pt;
+}
 
 h2{
     font-family: monospace;
