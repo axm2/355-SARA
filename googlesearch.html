@@ -60,13 +60,19 @@
         <div class="w3-container">
             <input type="text" id="query">
             <button id="gsearch" onclick="googlesearch()" style="font-size: 14pt;">Google Search</button>
-            <button id="togglebox" onclick="selectAll()" style="font-size: 14pt;">Select All</button>
+            <br />
+            <br />
             <select id="formatdd" style="font-size: 14pt;">
                 <option value="JSON">JSON</option>
                 <option value="CSV">CSV</option>
                 <option value="XML">XML</option>
             </select>
+            <input type=text" style="font-size: 14pt;" id="fileName" value="Enter your file name">
             <button id="download" onclick="download()" style="font-size: 14pt;">Download</button>
+            <br />
+            <br />
+            <button id="togglebox" onclick="selectAll()" style="font-size: 14pt;">Select All</button>
+
             <div id="resultsDiv">
             </div>
         </div>

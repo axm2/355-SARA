@@ -167,22 +167,84 @@ function download() {
     var descriptions = [];
     for (i = 0; i < sections.length; i++) {
         if (sections[i].childNodes[3].checked) {
-            titles[i] = sections[i].childNodes[0].innerText;
-            urls[i] = sections[i].childNodes[1].innerText;
-            descriptions[i] = sections[i].childNodes[2].innerText;
+            titles.push(sections[i].childNodes[0].innerText);
+            urls.push(sections[i].childNodes[1].innerText);
+            descriptions.push(sections[i].childNodes[2].innerText);
         }
     }
-    fileBuilder(titles,urls,descriptions,format);
+    fileBuilder(titles, urls, descriptions, format);
 }
 
-function fileBuilder(titles,urls,descriptions,format){
-    if(format="JSON"){
+function fileBuilder(titles, urls, descriptions, format) {
+    if (titles[0] != null) {
 
+
+        if (format == "JSON") {
+            var jsonOutObj = {
+                "Result": []
+            };
+            var i;
+            for (i = 0; i < titles.length; i++) {
+                var resultObj = {
+                    "title": titles[i],
+                    "url": urls[i],
+                    "description": descriptions[i]
+                };
+                jsonOutObj.Result.push(resultObj);
+            }
+            var jsonOutStr = JSON.stringify(jsonOutObj);
+            downloader(document.getElementById("fileName").value, jsonOutStr, format);
+
+        }
+        if (format == "XML") {
+            var doc = document.implementation.createDocument(null, 'results', null);
+            var i;
+            for (i = 0; i < titles.length; i++) {
+                var resultele = document.createElementNS(null, 'result', null);
+                var titleele = document.createElementNS(null, 'title', null);
+                var urlele = document.createElementNS(null, 'url', null);
+                var descele = document.createElementNS(null, 'description', null);
+                console.log(typeof (titles[i]));
+                titleele.innerHTML = titles[i];
+                urlele.innerHTML = urls[i];
+                descele.innerHTML = descriptions[i];
+                resultele.appendChild(titleele);
+                resultele.appendChild(urlele);
+                resultele.appendChild(descele);
+                doc.getElementsByTagName("results")[0].appendChild(resultele);
+            }
+
+            var serializer = new XMLSerializer();
+            var docStr = serializer.serializeToString(doc);
+            downloader(document.getElementById("fileName").value, docStr, format);
+
+        }
+        if (format == "CSV") {
+            var csvStr = "";
+            var i;
+            for (i = 0; i < titles.length; i++) {
+                csvStr += titles[i] + "," + urls[i] + "," + descriptions[i] + "\n";
+            }
+            downloader(document.getElementById("fileName").value, csvStr, format);
+
+        }
     }
-    if(format="XML"){
+}
 
+function downloader(filename, text, format) {
+    var pom = document.createElement('a');
+    pom.setAttribute('href', 'data:text/' + format + ';charset=utf-8,' + encodeURIComponent(text));
+    if (filename != "") {
+        pom.setAttribute('download', filename + "." + format);
+    } else {
+        pom.setAttribute('download', "file" + "." + format);
     }
-    if(format="CSV"){
 
+    if (document.createEvent) {
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
+    } else {
+        pom.click();
     }
 }

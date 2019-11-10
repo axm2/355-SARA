@@ -59,16 +59,22 @@
         <button class="w3-button w3-white w3-xxlarge" style="font-size:20px;" onclick="w3_open()">&#9776;</button>
         <div class="w3-container">
             <div class="filediv">
-                <input type="file" accept=".csv,.json,.xml" id="selectFiles" value="Import" /><br />
+                <input type="file" accept=".csv,.json,.xml" id="selectFiles" value="Import" />
                 <button id="import" onclick="filesearch()" style="font-size: 14pt;">Import</button>
-                <button id="togglebox" onclick="selectAll()" style="font-size: 14pt;">Select All</button>
+                <br />
+                <br />
                 <select id="formatdd" style="font-size: 14pt;">
                     <option value="JSON">JSON</option>
                     <option value="CSV">CSV</option>
                     <option value="XML">XML</option>
                 </select>
+                <input type=text" style="font-size: 14pt;" id="fileName" value="Enter your file name">
                 <button id="download" onclick="download()" style="font-size: 14pt;">Download</button>
+                <br />
+                <br />
+                <button id="togglebox" onclick="selectAll()" style="font-size: 14pt;">Select All</button>
             </div>
+            
             <div id="resultsDiv">
             </div>
         </div>
