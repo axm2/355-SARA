@@ -4,6 +4,8 @@ const app = express()
 const puppeteer = require('puppeteer');
 const mysql = require('mysql');
 
+
+
 var connection = mysql.createConnection({
   host: '*',
   user: '*',
@@ -27,17 +29,31 @@ app.post('/urlinput', function (req, res, next) {
 })
 
 app.post('/searchinput', function (req, res, next) {
+  switch(typeof(req.body.cbox)){
+    case 'undefined':
+      makeQuery(req.body.query, false, false);
+      break;
+    case 'string':
+      if(req.body.cbox=='case') makeQuery(req.body.query, true, false);
+      else makeQuery(req.body.query, false, true);
+      break;
+    case 'object':
+      makeQuery(req.body.query, true, true);
+      break;
+    default:
+      console.log("uh oh...");
+  }
   console.log(req.body.query);
-  res.redirect('search'); // We somehow need to do some javascript here to out the pages similar to 
+  //res.redirect('search');
 });
 
-app.listen(3000, function () {
+const server = app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
   console.log('-'.repeat(process.stdout.columns));
 })
 
-function makeQuery(query) {
-  // Also need to take in the current values of checkboxes and go from there (check document)
+function makeQuery(query, c, p) {
+  // If c is true, case is selected, if p is true, partial match is selected
   /*
   SELECT * 
   FROM page, word, page_word 
@@ -46,12 +62,17 @@ function makeQuery(query) {
   AND word.wordName = ‘wordEntered ‘
   ORDER BY freq desc
   */
-
-  connection.query('SELECT * from word', function (err, rows, fields) {
-    if (!err)
-      console.log('The solution is: ', rows);
+  
+  //Now lets account for the case and partial matches.
+  connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND word.wordName = ' + connection.escape(query) + 'ORDER by freq desc;', function (err, rows, fields) {
+    if (!err){
+      //console.log('The solution is: ', rows);
+      rows.forEach(function(element){
+        testtest(element);
+      });
+    }
     else
-      console.log('Error while performing Query.');
+      console.log(err);
   });
 }
 
@@ -112,34 +133,17 @@ function pushtodB(uniques, url, description, title, lastModified, lastIndexed) {
   var timeToIndex = new Date().getTime() - lastIndexed.getTime();
   //Create page, if it doesn't exist then we create.
   connection.query('INSERT INTO page (url, title, description, lastModified, lastIndexed, timeToIndex) values (' + connection.escape(url) + ',' + connection.escape(title) + ',' + connection.escape(description) + ',' + connection.escape(lastModified) + ',' + connection.escape(lastIndexed) + ',' + timeToIndex + ') ON DUPLICATE KEY UPDATE lastIndexed =' + connection.escape(lastIndexed) + ',timeToIndex =' + timeToIndex + ';', function (err, result) {
-    if (!err)
-      console.log('inserted');
-    else
-      console.log('Error while performing Query.');
+    if (err)
       console.log(err);
   });
   // https://stackoverflow.com/questions/921789/how-to-loop-through-a-plain-javascript-object-with-the-objects-as-members
   Object.keys(uniques).forEach(function (key) {
-    // For each word, new word save word 
-    //console.log(key, uniques[key]);
-    // https://stackoverflow.com/questions/19714308/mysql-how-to-insert-into-table-that-has-many-to-many-relationship
-    connection.query('INSERT INTO word (wordName) VALUES (' + connection.escape(key) + ');', function(err, result){
-      if(!err)
-        console.log('inserted a word!');
-      else
+    connection.query('INSERT INTO word (wordName) VALUES (' + connection.escape(key) + ');', function (err, result, fields) {
+      if (err)
         console.log(err);
     });
-    // TODO: do a select LAST_INSERT_ID() here and then use that var for the next QUERY
-    connection.query('SET @word_id = LAST_INSERT_ID();', function(err, result){
-      if(!err)
-        console.log('setting word_id');
-      else
-        console.log(err);
-    });
-    connection.query('INSERT IGNORE INTO page_word(pageId, wordId) VALUES (' + connection.escape(url) + ',@word_id);', function(err, result){
-      if(!err)
-        console.log('inserted a page_word!');
-      else
+    connection.query('INSERT INTO page_word(pageId, wordId, freq) VALUES (' + connection.escape(url) + ', (SELECT LAST_INSERT_ID()),'+ uniques[key] + ');', function (err, result) {
+      if (err)
         console.log(err);
     });
   });
@@ -158,4 +162,15 @@ function debug(uniques, url, description, title, lastModified, lastIndexed) {
   console.log("The timeToIndex is " + timeToIndex);
   console.log('-'.repeat(process.stdout.columns));
 
+}
+
+const io = require('socket.io').listen(server);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
+function testtest(data){
+  console.log(data);
+  io.emit('for_client', data);
 }
