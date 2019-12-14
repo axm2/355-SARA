@@ -80,9 +80,13 @@ function makeQuery(query, c, p, res) {
     });
   }
   else if (c && !p) {
+    start = new Date();
     connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND BINARY word.wordName = ' + connection.escape(query) + 'ORDER by freq desc;', function (err, rows, fields) {
       if (!err) {
         res.render('search', {data: rows});
+        connection.query('INSERT INTO search (terms, count, searchDate, timeToSearch) VALUES (' + connection.escape(query) +','+ connection.escape(rows.length) +',' +connection.escape(new Date())+',' +connection.escape(new Date().getTime() - start.getTime())+');', function (err){
+          if(err) console.log(err);
+        });
       }
       else
         console.log(err);
@@ -90,9 +94,13 @@ function makeQuery(query, c, p, res) {
   }
   else if (!c && p) {
     var query2 = '%' + query + '%'
+    start = new Date();
     connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND word.wordName LIKE ' + connection.escape(query2) + 'ORDER by freq desc;', function (err, rows, fields) {
       if (!err) {
         res.render('search', {data: rows});
+        connection.query('INSERT INTO search (terms, count, searchDate, timeToSearch) VALUES (' + connection.escape(query) +','+ connection.escape(rows.length) +',' +connection.escape(new Date())+',' +connection.escape(new Date().getTime() - start.getTime())+');', function (err){
+          if(err) console.log(err);
+        });
       }
       else
         console.log(err);
@@ -101,9 +109,13 @@ function makeQuery(query, c, p, res) {
   }
   else if (c && p) {
     var query2 = '%' + query + '%'
+    start = new Date();
     connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND BINARY word.wordName LIKE ' + connection.escape(query2) + 'ORDER by freq desc;', function (err, rows, fields) {
       if (!err) {
         res.render('search', {data: rows});
+        connection.query('INSERT INTO search (terms, count, searchDate, timeToSearch) VALUES (' + connection.escape(query) +','+ connection.escape(rows.length) +',' +connection.escape(new Date())+',' +connection.escape(new Date().getTime() - start.getTime())+');', function (err){
+          if(err) console.log(err);
+        });
       }
       else
         console.log(err);
