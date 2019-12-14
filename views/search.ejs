@@ -7,8 +7,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
+<script src="searching.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+    var counter =0;
     function resultsDisplayer(data) {
 
         var section = document.createElement("section");
@@ -31,7 +33,8 @@
 
         var checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        //checkbox.id = "checkbox" + i;
+        checkbox.id = "checkbox" + counter;
+        counter++;
         section.appendChild(checkbox);
 
         document.getElementById("resultsDiv").appendChild(section);
@@ -40,7 +43,6 @@
     var socket = io();
     socket.on('for_client', function (data) {
         resultsDisplayer(data);
-        window.stop();
     });
 </script>
 

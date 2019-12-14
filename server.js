@@ -4,8 +4,6 @@ const app = express()
 const puppeteer = require('puppeteer');
 const mysql = require('mysql');
 
-
-
 var connection = mysql.createConnection({
   host: '*',
   user: '*',
@@ -29,12 +27,12 @@ app.post('/urlinput', function (req, res, next) {
 })
 
 app.post('/searchinput', function (req, res, next) {
-  switch(typeof(req.body.cbox)){
+  switch (typeof (req.body.cbox)) {
     case 'undefined':
       makeQuery(req.body.query, false, false);
       break;
     case 'string':
-      if(req.body.cbox=='case') makeQuery(req.body.query, true, false);
+      if (req.body.cbox == 'case') makeQuery(req.body.query, true, false);
       else makeQuery(req.body.query, false, true);
       break;
     case 'object':
@@ -44,7 +42,8 @@ app.post('/searchinput', function (req, res, next) {
       console.log("uh oh...");
   }
   console.log(req.body.query);
-  //res.redirect('search');
+  res.write('search');
+  res.write('<h1>Hi</h1>');
 });
 
 const server = app.listen(3000, function () {
@@ -62,18 +61,60 @@ function makeQuery(query, c, p) {
   AND word.wordName = ‘wordEntered ‘
   ORDER BY freq desc
   */
-  
+
   //Now lets account for the case and partial matches.
-  connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND word.wordName = ' + connection.escape(query) + 'ORDER by freq desc;', function (err, rows, fields) {
-    if (!err){
-      //console.log('The solution is: ', rows);
-      rows.forEach(function(element){
-        testtest(element);
-      });
-    }
-    else
-      console.log(err);
-  });
+  if (!c && !p) {
+    connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND word.wordName = ' + connection.escape(query) + 'ORDER by freq desc;', function (err, rows, fields) {
+      if (!err) {
+        //console.log('The solution is: ', rows);
+        rows.forEach(function (element) {
+          testtest(element);
+        });
+      }
+      else
+        console.log(err);
+    });
+  }
+  else if (c && !p) {
+    connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND BINARY word.wordName = ' + connection.escape(query) + 'ORDER by freq desc;', function (err, rows, fields) {
+      if (!err) {
+        //console.log('The solution is: ', rows);
+        rows.forEach(function (element) {
+          testtest(element);
+        });
+      }
+      else
+        console.log(err);
+    });
+  }
+  else if (!c && p) {
+    var query2 = '%' + query + '%'
+    connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND word.wordName LIKE ' + connection.escape(query2) + 'ORDER by freq desc;', function (err, rows, fields) {
+      if (!err) {
+        //console.log('The solution is: ', rows);
+        rows.forEach(function (element) {
+          testtest(element);
+        });
+      }
+      else
+        console.log(err);
+    });
+
+  }
+  else if (c && p) {
+    var query2 = '%' + query + '%'
+    connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND BINARY word.wordName LIKE ' + connection.escape(query2) + 'ORDER by freq desc;', function (err, rows, fields) {
+      if (!err) {
+        //console.log('The solution is: ', rows);
+        rows.forEach(function (element) {
+          testtest(element);
+        });
+      }
+      else
+        console.log(err);
+    });
+
+  }
 }
 
 async function parseURL2(url) {
@@ -142,7 +183,7 @@ function pushtodB(uniques, url, description, title, lastModified, lastIndexed) {
       if (err)
         console.log(err);
     });
-    connection.query('INSERT INTO page_word(pageId, wordId, freq) VALUES (' + connection.escape(url) + ', (SELECT LAST_INSERT_ID()),'+ uniques[key] + ');', function (err, result) {
+    connection.query('INSERT INTO page_word(pageId, wordId, freq) VALUES (' + connection.escape(url) + ', (SELECT LAST_INSERT_ID()),' + uniques[key] + ');', function (err, result) {
       if (err)
         console.log(err);
     });
@@ -166,11 +207,11 @@ function debug(uniques, url, description, title, lastModified, lastIndexed) {
 
 const io = require('socket.io').listen(server);
 
-io.on('connection', function(socket){
+io.on('connection', function (socket) {
   console.log('a user connected');
 });
 
-function testtest(data){
+function testtest(data) {
   console.log(data);
   io.emit('for_client', data);
 }
