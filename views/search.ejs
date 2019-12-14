@@ -6,11 +6,13 @@
     <title>CS 355 Home Page</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="searching.js"></script>
 </head>
-<script src="searching.js"></script>
+
 
 
 <body>
+    <script src="searching.js"></script>
     <!-- Sidebar -->
     <div class="w3-sidebar w3-bar-block w3-animate-left" style="display:none;z-index:5" id="mySidebar">
         <button class="w3-bar-item w3-button w3-large" style="width: 20%" onclick="w3_close()"> &times;</button>
@@ -92,12 +94,7 @@
                 <% if (data.length>0){ %>
                 <% data.forEach(function(value) { %>
                     <% counter++; %>
-                <section style="border: 1px solid rgb(184, 214, 140);">
-                    <h2><%= value.title %></h2>
-                    <a href="<%- value.url -%>" style="color: rgb(232, 79, 79);"><%= value.url %></a>
-                    <p><%= value.description %></p>
-                    <input type="checkbox" id="checkbox<%- counter %>">
-                </section>
+                <section style="border: 1px solid rgb(184, 214, 140);"><h2><%= value.title %></h2><a href="<%- value.url -%>" style="color: rgb(232, 79, 79);"><%= value.url %></a><p><%= value.description %></p><input type="checkbox" id="checkbox<%- counter %>"></section>
                 <% }) %>
                 <% counter=-1; %>
                 <% } %>
