@@ -22,6 +22,11 @@ app.get('/search', function (req, res) {
   res.render('search', {data: []});
 })
 
+app.get('/searchstats', function (req, res) {
+  makeStatQuery(res);
+  //res.render('searchstats', {data: []});
+})
+
 app.post('/urlinput', function (req, res, next) {
   parseURL2(req.body.urlInput, res); // This should go to the 
   //res.redirect('search');
@@ -62,9 +67,13 @@ function makeQuery(query, c, p, res) {
 
   //Now lets account for the case and partial matches.
   if (!c && !p) {
+    start = new Date();
     connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND word.wordName = ' + connection.escape(query) + 'ORDER by freq desc;', function (err, rows, fields) {
       if (!err) {
         res.render('search', {data: rows});
+        connection.query('INSERT INTO search (terms, count, searchDate, timeToSearch) VALUES (' + connection.escape(query) +','+ connection.escape(rows.length) +',' +connection.escape(new Date())+',' +connection.escape(new Date().getTime() - start.getTime())+');', function (err){
+          if(err) console.log(err);
+        });
       }
       else
         console.log(err);
@@ -101,6 +110,14 @@ function makeQuery(query, c, p, res) {
     });
 
   }
+}
+
+function makeStatQuery(res){
+  connection.query('SELECT * FROM search;', function(err, rows, fields){
+    if(!err) res.render('searchstats', {data: rows});
+    else console.log(err);
+  })
+
 }
 
 async function parseURL2(url, res) {
