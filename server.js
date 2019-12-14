@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const app = express()
 const puppeteer = require('puppeteer');
 const mysql = require('mysql');
+// I should have used mysql2 here which has support for promises, async, await
 
 var connection = mysql.createConnection({
   host: '*',
@@ -18,32 +19,29 @@ app.use(bodyParser.urlencoded({
 app.set('view engine', 'ejs')
 
 app.get('/search', function (req, res) {
-  res.render('search');
+  res.render('search', {data: []});
 })
 
 app.post('/urlinput', function (req, res, next) {
-  parseURL2(req.body.urlInput); // This should go to the 
-  res.redirect('search');
+  parseURL2(req.body.urlInput, res); // This should go to the 
+  //res.redirect('search');
 })
 
 app.post('/searchinput', function (req, res, next) {
   switch (typeof (req.body.cbox)) {
     case 'undefined':
-      makeQuery(req.body.query, false, false);
+      makeQuery(req.body.query, false, false, res);
       break;
     case 'string':
-      if (req.body.cbox == 'case') makeQuery(req.body.query, true, false);
-      else makeQuery(req.body.query, false, true);
+      if (req.body.cbox == 'case') makeQuery(req.body.query, true, false, res);
+      else makeQuery(req.body.query, false, true, res);
       break;
     case 'object':
-      makeQuery(req.body.query, true, true);
+      makeQuery(req.body.query, true, true, res);
       break;
     default:
       console.log("uh oh...");
   }
-  console.log(req.body.query);
-  res.write('search');
-  res.write('<h1>Hi</h1>');
 });
 
 const server = app.listen(3000, function () {
@@ -51,7 +49,7 @@ const server = app.listen(3000, function () {
   console.log('-'.repeat(process.stdout.columns));
 })
 
-function makeQuery(query, c, p) {
+function makeQuery(query, c, p, res) {
   // If c is true, case is selected, if p is true, partial match is selected
   /*
   SELECT * 
@@ -66,10 +64,7 @@ function makeQuery(query, c, p) {
   if (!c && !p) {
     connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND word.wordName = ' + connection.escape(query) + 'ORDER by freq desc;', function (err, rows, fields) {
       if (!err) {
-        //console.log('The solution is: ', rows);
-        rows.forEach(function (element) {
-          testtest(element);
-        });
+        res.render('search', {data: rows});
       }
       else
         console.log(err);
@@ -78,10 +73,7 @@ function makeQuery(query, c, p) {
   else if (c && !p) {
     connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND BINARY word.wordName = ' + connection.escape(query) + 'ORDER by freq desc;', function (err, rows, fields) {
       if (!err) {
-        //console.log('The solution is: ', rows);
-        rows.forEach(function (element) {
-          testtest(element);
-        });
+        res.render('search', {data: rows});
       }
       else
         console.log(err);
@@ -91,10 +83,7 @@ function makeQuery(query, c, p) {
     var query2 = '%' + query + '%'
     connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND word.wordName LIKE ' + connection.escape(query2) + 'ORDER by freq desc;', function (err, rows, fields) {
       if (!err) {
-        //console.log('The solution is: ', rows);
-        rows.forEach(function (element) {
-          testtest(element);
-        });
+        res.render('search', {data: rows});
       }
       else
         console.log(err);
@@ -105,10 +94,7 @@ function makeQuery(query, c, p) {
     var query2 = '%' + query + '%'
     connection.query('SELECT * from page, word, page_word WHERE page.url = page_word.pageId AND word.wordId = page_word.wordId AND BINARY word.wordName LIKE ' + connection.escape(query2) + 'ORDER by freq desc;', function (err, rows, fields) {
       if (!err) {
-        //console.log('The solution is: ', rows);
-        rows.forEach(function (element) {
-          testtest(element);
-        });
+        res.render('search', {data: rows});
       }
       else
         console.log(err);
@@ -117,7 +103,7 @@ function makeQuery(query, c, p) {
   }
 }
 
-async function parseURL2(url) {
+async function parseURL2(url, res) {
   // This snippet spins up an instance of chrome on the server, then loads the page, then returns only the text for the whole page.
   // https://stackoverflow.com/questions/52256799/how-to-use-document-getelementbyid-in-nodejs?noredirect=1&lq=1
   // We could optimize this so that we don't have to open and close a new instance everytime we parse, but that's a lot of work so
@@ -152,7 +138,7 @@ async function parseURL2(url) {
   var lastIndexed = new Date();
   browser.close();
   var uniques = uniqueCounter(text); // uniques is a set of the words in the url
-  pushtodB(uniques, url, description, title, lastModified, lastIndexed); // now lets push it to the DB
+  pushtodB(uniques, url, description, title, lastModified, lastIndexed, res); // now lets push it to the DB
   //debug(uniques, url, description, title, lastModified, lastIndexed);
 
 }
@@ -168,7 +154,7 @@ function uniqueCounter(x) { // x is a string
   return counts;
 }
 
-function pushtodB(uniques, url, description, title, lastModified, lastIndexed) {
+function pushtodB(uniques, url, description, title, lastModified, lastIndexed, res) {
   //we also should take in the split up results so that we can count repeats.
   //make the timeToIndex
   var timeToIndex = new Date().getTime() - lastIndexed.getTime();
@@ -188,6 +174,7 @@ function pushtodB(uniques, url, description, title, lastModified, lastIndexed) {
         console.log(err);
     });
   });
+  res.redirect('/search');
 }
 
 function debug(uniques, url, description, title, lastModified, lastIndexed) {
@@ -205,13 +192,3 @@ function debug(uniques, url, description, title, lastModified, lastIndexed) {
 
 }
 
-const io = require('socket.io').listen(server);
-
-io.on('connection', function (socket) {
-  console.log('a user connected');
-});
-
-function testtest(data) {
-  console.log(data);
-  io.emit('for_client', data);
-}

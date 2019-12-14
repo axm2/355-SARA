@@ -8,43 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <script src="searching.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    var counter =0;
-    function resultsDisplayer(data) {
-
-        var section = document.createElement("section");
-        section.style = "border: #B8D68C; border-style: solid; border-width:1px";
-
-        var titleheader = document.createElement("h2");
-        titleheader.innerHTML = data.title;
-        section.appendChild(titleheader);
-
-        var url = document.createElement("a");
-        url.innerHTML = data.url;
-        url.href = data.url;
-        url.style = "color: #E84F4F";
-        section.appendChild(url);
-
-        var description = document.createElement("p");
-        //Check if not null
-        if (data.description !== null) description.innerHTML = data.description;
-        section.appendChild(description);
-
-        var checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.id = "checkbox" + counter;
-        counter++;
-        section.appendChild(checkbox);
-
-        document.getElementById("resultsDiv").appendChild(section);
-
-    }
-    var socket = io();
-    socket.on('for_client', function (data) {
-        resultsDisplayer(data);
-    });
-</script>
 
 
 <body>
@@ -104,7 +67,7 @@
                 <input name="query" type="text" class="ghost-input" placeholder="Enter a query">
                 <input type="submit" class="ghost-button" value="Search Database">
                 <div style="color:white; font-size: 14pt; font-family: Arial, Helvetica, sans-serif;">
-                    <input type="checkbox" value="case" name="cbox"> case-insensitive
+                    <input type="checkbox" value="case" name="cbox"> case-sensitive
                     <input type="checkbox" value="partial" name="cbox"> allow partial match
                 </div>
             </form>
@@ -124,6 +87,19 @@
             <button id="togglebox" onclick="selectAll()" style="font-size: 14pt;">Select All</button>
 
             <div id="resultsDiv">
+                <% counter =-1; %>
+                <% if (data.length>0){ %>
+                <% data.forEach(function(value) { %>
+                    <% counter++; %>
+                <section style="border: 1px solid rgb(184, 214, 140);">
+                    <h2><%= value.title %></h2>
+                    <a href="<%- value.url -%>" style="color: rgb(232, 79, 79);"><%= value.url %></a>
+                    <p><%= value.description %></p>
+                    <input type="checkbox" id="checkbox<%- counter %>">
+                </section>
+                <% }) %>
+                <% counter=-1; %>
+                <% } %>
             </div>
         </div>
     </div>
