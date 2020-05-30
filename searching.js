@@ -1,6 +1,6 @@
 function googlesearch() {
     var searchterm = document.getElementById("query").value
-    var url = "https://www.googleapis.com/customsearch/v1/siterestrict?key=AIzaSyDwijj_hIBLqxw5__S3dkghvPZbt-_djvk&cx=011639170629408361658:ycrrovtrshs&q=" + searchterm;
+    var url = "https://www.googleapis.com/customsearch/v1/siterestrict?key=AIzaSyDRdgirA2Pakl4PMi7t-8LFfnnjEFHnbY4&cx=005627457786250373845:lwanzyzfwji&q=" + searchterm;
     var titles = [];
     var urls = [];
     var descriptions = [];
